@@ -1,0 +1,43 @@
+body { margin: 0; font-family: 'Roboto', sans-serif; background: #181a1b; color: #fff; }
+header { background: #222a2d; padding: 16px 32px; display: flex; align-items: center; justify-content: space-between; }
+.logo { font-size: 2rem; font-weight: bold; color: #bb86fc; letter-spacing: 2px; }
+nav { display: flex; gap: 24px; }
+nav a { color: #fff; text-decoration: none; font-weight: 500; transition: color 0.2s; }
+nav a:hover { color: #bb86fc; }
+.search-bar { background: #232728; border-radius: 20px; padding: 6px 16px; border: none; color: #fff; width: 220px; }
+main { padding: 32px; }
+.gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 24px; }
+.art-card { background: #232728; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.2); transition: transform 0.2s; }
+.art-card:hover { transform: translateY(-4px) scale(1.03); }
+.art-card img { width: 100%; display: block; }
+.art-card .info { padding: 12px; }
+.art-card .title { font-size: 1.1rem; font-weight: bold; margin-bottom: 4px; }
+.art-card .author { font-size: 0.95rem; color: #bb86fc; }
+@media (max-width: 600px) {
+    header { flex-direction: column; gap: 12px; }
+    main { padding: 12px; }
+}
+.modal {
+    position: fixed; left: 0; top: 0; width: 100vw; height: 100vh;
+    background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 1000;
+  }
+.modal-content {
+  background: #232728; padding: 32px 24px; border-radius: 10px; min-width: 320px; box-shadow: 0 2px 16px rgba(0,0,0,0.3);
+  display: flex; flex-direction: column; gap: 16px;
+}
+.modal-content input {
+  padding: 10px; border-radius: 6px; border: none; margin-bottom: 8px; background: #181a1b; color: #fff;
+}
+.modal-content button {
+  background: #bb86fc; color: #181a1b; border: none; border-radius: 6px; padding: 10px; font-weight: bold; cursor: pointer;
+}
+.close {
+  align-self: flex-end; font-size: 1.5rem; cursor: pointer; color: #fff;
+}
+#loginBtn, #signupBtn {
+  background: #232728; color: #bb86fc; border: 1px solid #bb86fc; border-radius: 6px; padding: 6px 16px; margin-left: 8px; cursor: pointer;
+  font-weight: bold;
+}
+#loginBtn:hover, #signupBtn:hover {
+  background: #bb86fc; color: #181a1b;
+}
