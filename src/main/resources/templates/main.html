@@ -1,0 +1,1073 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>offbeatHub - 창작자들의 아트 커뮤니티</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #6c5ce7;
+            --primary-dark: #5a4fcf;
+            --secondary-color: #367bf0;
+            --bg-primary: #0e1114;
+            --bg-secondary: #1a1d23;
+            --bg-card: #242831;
+            --text-primary: #ffffff;
+            --text-secondary: #b8bcc8;
+            --text-muted: #828691;
+            --border-color: #2d3139;
+            --hover-color: #2a2e37;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        /* Header */
+        .header {
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+
+        .navbar {
+            padding: 1rem 0;
+        }
+
+        .navbar-brand {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: var(--primary-color) !important;
+            text-decoration: none;
+            letter-spacing: -0.5px;
+        }
+
+        .navbar-nav .nav-link {
+            color: var(--text-secondary) !important;
+            font-weight: 500;
+            margin: 0 0.5rem;
+            padding: 0.5rem 1rem !important;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .navbar-nav .nav-link:hover {
+            color: var(--text-primary) !important;
+            background: var(--hover-color);
+        }
+
+        .search-container {
+            position: relative;
+            max-width: 300px;
+            width: 100%;
+        }
+
+        .search-input {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 25px;
+            color: var(--text-primary);
+            padding: 0.75rem 1rem 0.75rem 3rem;
+            width: 100%;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(5, 206, 120, 0.1);
+            background: var(--bg-primary);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 1rem;
+        }
+
+        .auth-buttons .btn {
+            margin-left: 0.5rem;
+            padding: 0.5rem 1.5rem;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline-primary {
+            color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        .btn-outline-primary:hover {
+            background: var(--primary-color);
+            border-color: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            border-color: var(--primary-dark);
+        }
+
+        /* Hero Section */
+        .hero-section {
+            background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
+            padding: 4rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="%23ffffff" stroke-width="0.3" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+            opacity: 0.5;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.2;
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            margin-bottom: 2.5rem;
+            max-width: 600px;
+        }
+
+        .hero-cta {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-hero {
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-hero-primary {
+            background: linear-gradient(45deg, var(--primary-color), var(--primary-dark));
+            border: none;
+            color: white;
+        }
+
+        .btn-hero-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(5, 206, 120, 0.3);
+        }
+
+        .btn-hero-outline {
+            background: transparent;
+            border: 2px solid var(--border-color);
+            color: var(--text-primary);
+        }
+
+        .btn-hero-outline:hover {
+            background: var(--bg-card);
+            border-color: var(--primary-color);
+            color: var(--text-primary);
+        }
+
+        /* Featured Categories */
+        .featured-categories {
+            padding: 4rem 0 2rem;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            border-radius: 2px;
+        }
+
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .category-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .category-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(5, 206, 120, 0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .category-card:hover::before {
+            left: 100%;
+        }
+
+        .category-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary-color);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+        }
+
+        .category-icon {
+            font-size: 3rem;
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+        }
+
+        .category-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .category-description {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        /* Gallery Section */
+        .gallery-section {
+            padding: 4rem 0;
+            background: var(--bg-secondary);
+        }
+
+        .gallery-tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .gallery-tab {
+            background: transparent;
+            border: 2px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 0.75rem 1.5rem;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .gallery-tab.active,
+        .gallery-tab:hover {
+            background: var(--primary-color);
+            border-color: var(--primary-color);
+            color: white;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .art-card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 1px solid var(--border-color);
+        }
+
+        .art-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            border-color: var(--primary-color);
+        }
+
+        .art-image {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .art-card:hover .art-image {
+            transform: scale(1.05);
+        }
+
+        .art-info {
+            padding: 1.5rem;
+        }
+
+        .art-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .art-author {
+            color: var(--primary-color);
+            font-weight: 500;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .art-stats {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        /* Community Section */
+        .community-section {
+            padding: 4rem 0;
+        }
+
+        .community-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            padding: 2rem;
+            border-radius: 16px;
+            text-align: center;
+            border: 1px solid var(--border-color);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border-color);
+            padding: 3rem 0 2rem;
+            margin-top: 4rem;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h5 {
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .footer-section a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            display: block;
+            margin-bottom: 0.5rem;
+            transition: color 0.3s ease;
+        }
+
+        .footer-section a:hover {
+            color: var(--primary-color);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid var(--border-color);
+            padding-top: 2rem;
+            text-align: center;
+            color: var(--text-muted);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1.1rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .category-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .gallery-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
+
+            .navbar-nav {
+                margin-top: 1rem;
+            }
+
+            .search-container {
+                margin: 1rem 0;
+            }
+
+            .auth-buttons {
+                margin-top: 1rem;
+            }
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid var(--border-color);
+            border-radius: 50%;
+            border-top-color: var(--primary-color);
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <nav class="navbar navbar-expand-lg">
+                <a class="navbar-brand" href="#">offbeatHub</a>
+                
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <i class="fas fa-bars text-white"></i>
+                </button>
+                
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav me-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="#"><i class="fas fa-home me-1"></i>홈</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#"><i class="fas fa-compass me-1"></i>탐색</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#"><i class="fas fa-users me-1"></i>커뮤니티</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#"><i class="fas fa-plus me-1"></i>업로드</a>
+                        </li>
+                    </ul>
+                    
+                    <div class="search-container me-3">
+                        <i class="fas fa-search search-icon"></i>
+                        <input type="text" class="search-input" placeholder="작품, 아티스트 검색...">
+                    </div>
+                    
+                    <div class="auth-buttons">
+                        <a href="/login"><button class="btn btn-outline-primary">로그인</button></a>
+                        <a href="/signup"><button class="btn btn-primary">회원가입</button></a>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6 hero-content">
+                    <h1 class="hero-title">창작의 무한한 가능성을 발견하세요</h1>
+                    <p class="hero-subtitle">
+                        전 세계 아티스트들과 함께 작품을 공유하고, 영감을 얻고, 창작 커뮤니티의 일원이 되어보세요.
+                    </p>
+                    <div class="hero-cta">
+                        <button class="btn btn-hero btn-hero-primary">
+                            <i class="fas fa-rocket me-2"></i>지금 시작하기
+                        </button>
+                        <button class="btn btn-hero btn-hero-outline">
+                            <i class="fas fa-play me-2"></i>둘러보기
+                        </button>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="hero-image text-center">
+                        <i class="fas fa-palette" style="font-size: 15rem; color: var(--primary-color); opacity: 0.3;"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Categories -->
+    <section class="featured-categories">
+        <div class="container">
+            <h2 class="section-title">다양한 창작 분야</h2>
+            <div class="category-grid">
+                <div class="category-card">
+                    <div class="category-icon">
+                        <i class="fas fa-paint-brush"></i>
+                    </div>
+                    <h3 class="category-title">디지털 아트</h3>
+                    <p class="category-description">
+                        최신 디지털 도구로 만들어진 혁신적인 작품들을 만나보세요
+                    </p>
+                </div>
+                <div class="category-card">
+                    <div class="category-icon">
+                        <i class="fas fa-camera"></i>
+                    </div>
+                    <h3 class="category-title">사진</h3>
+                    <p class="category-description">
+                        순간을 포착한 아름다운 사진과 창의적인 포토그래피
+                    </p>
+                </div>
+                <div class="category-card">
+                    <div class="category-icon">
+                        <i class="fas fa-cube"></i>
+                    </div>
+                    <h3 class="category-title">3D 모델링</h3>
+                    <p class="category-description">
+                        차세대 3D 기술로 구현한 놀라운 모델링 작품들
+                    </p>
+                </div>
+                <div class="category-card">
+                    <div class="category-icon">
+                        <i class="fas fa-pencil-alt"></i>
+                    </div>
+                    <h3 class="category-title">일러스트</h3>
+                    <p class="category-description">
+                        상상력이 가득한 손그림과 디지털 일러스트레이션
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section class="gallery-section">
+        <div class="container">
+            <h2 class="section-title">추천 갤러리</h2>
+            
+            <div class="gallery-tabs">
+                <button class="gallery-tab active">최신</button>
+                <button class="gallery-tab">인기</button>
+                <button class="gallery-tab">추천</button>
+                <button class="gallery-tab">팔로잉</button>
+            </div>
+            
+            <div class="gallery-grid">
+                <div class="art-card">
+                    <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80" 
+                         alt="드림스케이프" class="art-image">
+                    <div class="art-info">
+                        <h3 class="art-title">몽환적 풍경</h3>
+                        <div class="art-author">
+                            <i class="fas fa-user-circle"></i>
+                            Alice Park
+                        </div>
+                        <div class="art-stats">
+                            <div class="stat-item">
+                                <i class="fas fa-heart text-danger"></i>
+                                <span>1.2k</span>
+                            </div>
+                            <div class="stat-item">
+                                <i class="fas fa-eye"></i>
+                                <span>5.8k</span>
+                            </div>
+                            <div class="stat-item">
+                                <i class="fas fa-comment"></i>
+                                <span>45</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="art-card">
+                    <img src="https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=400&q=80" 
+                         alt="도시의 밤" class="art-image">
+                    <div class="art-info">
+                        <h3 class="art-title">네온 시티</h3>
+                        <div class="art-author">
+                            <i class="fas fa-user-circle"></i>
+                            Bob Chen
+                        </div>
+                        <div class="art-stats">
+                            <div class="stat-item">
+                                <i class="fas fa-heart text-danger"></i>
+                                <span>890</span>
+                            </div>
+                            <div class="stat-item">
+                                <i class="fas fa-eye"></i>
+                                <span>3.2k</span>
+                            </div>
+                            <div class="stat-item">
+                                <i class="fas fa-comment"></i>
+                                <span>28</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="art-card">
+                    <img src="https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=400&q=80" 
+                         alt="신비한 숲" class="art-image">
+                    <div class="art-info">
+                        <h3 class="art-title">마법의 숲</h3>
+                        <div class="art-author">
+                            <i class="fas fa-user-circle"></i>
+                            Carol Kim
+                        </div>
+                        <div class="art-stats">
+                            <div class="stat-item">
+                                <i class="fas fa-heart text-danger"></i>
+                                <span>2.1k</span>
+                            </div>
+                            <div class="stat-item">
+                                <i class="fas fa-eye"></i>
+                                <span>7.5k</span>
+                            </div>
+                            <div class="stat-item">
+                                <i class="fas fa-comment"></i>
+                                <span>67</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="art-card">
+                    <img src="https://images.unsplash.com/photo-1541961017774-22349e4a1262?auto=format&fit=crop&w=400&q=80" 
+                         alt="추상화" class="art-image">
+                    <div class="art-info">
+                        <h3 class="art-title">컬러 플로우</h3>
+                        <div class="art-author">
+                            <i class="fas fa-user-circle"></i>
+                            David Lee
+                        </div>
+                        <div class="art-stats">
+                            <div class="stat-item">
+                                <i class="fas fa-heart text-danger"></i>
+                                <span>756</span>
+                            </div>
+                            <div class="stat-item">
+                                <i class="fas fa-eye"></i>
+                                <span>2.9k</span>
+                            </div>
+                            <div class="stat-item">
+                                <i class="fas fa-comment"></i>
+                                <span>34</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="art-card">
+                    <img src="https://images.unsplash.com/photo-1544967882-344259ca46d5?auto=format&fit=crop&w=400&q=80" 
+                         alt="모던아트" class="art-image">
+                    <div class="art-info">
+                        <h3 class="art-title">모던 스페이스</h3>
+                        <div class="art-author">
+                            <i class="fas fa-user-circle"></i>
+                            Emma Wilson
+                        </div>
+                        <div class="art-stats">
+                            <div class="stat-item">
+                                <i class="fas fa-heart text-danger"></i>
+                                <span>1.8k</span>
+                            </div>
+                            <div class="stat-item">
+                                <i class="fas fa-eye"></i>
+                                <span>6.1k</span>
+                            </div>
+                            <div class="stat-item">
+                                <i class="fas fa-comment"></i>
+                                <span>52</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="art-card">
+                    <img src="https://images.unsplash.com/photo-1578662996442-48f60103fc96?auto=format&fit=crop&w=400&q=80" 
+                         alt="판타지" class="art-image">
+                    <div class="art-info">
+                        <h3 class="art-title">판타지 월드</h3>
+                        <div class="art-author">
+                            <i class="fas fa-user-circle"></i>
+                            Frank Zhang
+                        </div>
+                        <div class="art-stats">
+                            <div class="stat-item">
+                                <i class="fas fa-heart text-danger"></i>
+                                <span>3.4k</span>
+                            </div>
+                            <div class="stat-item">
+                                <i class="fas fa-eye"></i>
+                                <span>12k</span>
+                            </div>
+                            <div class="stat-item">
+                                <i class="fas fa-comment"></i>
+                                <span>89</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-4">
+                <button class="btn btn-outline-primary btn-lg">
+                    <i class="fas fa-plus me-2"></i>더 많은 작품 보기
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Community Stats -->
+    <section class="community-section">
+        <div class="container">
+            <h2 class="section-title">활발한 창작 커뮤니티</h2>
+            <div class="community-stats">
+                <div class="stat-card">
+                    <div class="stat-number">50K+</div>
+                    <div class="stat-label">활성 아티스트</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">2M+</div>
+                    <div class="stat-label">업로드된 작품</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">15M+</div>
+                    <div class="stat-label">총 조회수</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">100K+</div>
+                    <div class="stat-label">커뮤니티 멤버</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h5>offbeatHub</h5>
+                    <p class="text-secondary mb-3">창작자들을 위한 글로벌 아트 커뮤니티</p>
+                    <div class="social-links">
+                        <a href="#" class="me-3"><i class="fab fa-instagram fa-lg"></i></a>
+                        <a href="#" class="me-3"><i class="fab fa-twitter fa-lg"></i></a>
+                        <a href="#" class="me-3"><i class="fab fa-facebook fa-lg"></i></a>
+                        <a href="#" class="me-3"><i class="fab fa-youtube fa-lg"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h5>탐색</h5>
+                    <a href="#">최신 작품</a>
+                    <a href="#">인기 작품</a>
+                    <a href="#">카테고리</a>
+                    <a href="#">아티스트</a>
+                    <a href="#">컬렉션</a>
+                </div>
+                <div class="footer-section">
+                    <h5>커뮤니티</h5>
+                    <a href="#">포럼</a>
+                    <a href="#">챌린지</a>
+                    <a href="#">튜토리얼</a>
+                    <a href="#">이벤트</a>
+                    <a href="#">뉴스</a>
+                </div>
+                <div class="footer-section">
+                    <h5>지원</h5>
+                    <a href="#">도움말</a>
+                    <a href="#">문의하기</a>
+                    <a href="#">개발자 API</a>
+                    <a href="#">파트너십</a>
+                    <a href="#">채용</a>
+                </div>
+                <div class="footer-section">
+                    <h5>정책</h5>
+                    <a href="#">이용약관</a>
+                    <a href="#">개인정보보호</a>
+                    <a href="#">저작권 정책</a>
+                    <a href="#">커뮤니티 가이드</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 offbeatHub. 모든 권리 보유. | 창작자들의 꿈을 응원합니다.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Gallery Tab Switching
+        document.querySelectorAll('.gallery-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                // Remove active class from all tabs
+                document.querySelectorAll('.gallery-tab').forEach(t => t.classList.remove('active'));
+                // Add active class to clicked tab
+                this.classList.add('active');
+                
+                // Here you would typically load different content based on the tab
+                console.log('Loading content for:', this.textContent);
+            });
+        });
+
+        // Search functionality
+        document.querySelector('.search-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                const query = this.value.trim();
+                if (query) {
+                    console.log('Searching for:', query);
+                    // Implement search functionality
+                }
+            }
+        });
+
+        // Art card interactions
+        document.querySelectorAll('.art-card').forEach(card => {
+            card.addEventListener('click', function() {
+                // Get art info
+                const title = this.querySelector('.art-title').textContent;
+                const author = this.querySelector('.art-author').textContent;
+                console.log('Viewing artwork:', title, 'by', author);
+                // Navigate to artwork detail page
+            });
+        });
+
+        // Category card interactions
+        document.querySelectorAll('.category-card').forEach(card => {
+            card.addEventListener('click', function() {
+                const category = this.querySelector('.category-title').textContent;
+                console.log('Browsing category:', category);
+                // Navigate to category page
+            });
+        });
+
+        // Hero CTA interactions
+        document.querySelector('.btn-hero-primary').addEventListener('click', function() {
+            // Redirect to signup or onboarding
+            window.location.href = '/signup';
+        });
+
+        document.querySelector('.btn-hero-outline').addEventListener('click', function() {
+            // Scroll to gallery or explore page
+            document.querySelector('.gallery-section').scrollIntoView({
+                behavior: 'smooth'
+            });
+        });
+
+        // Smooth scrolling for navigation
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Intersection Observer for animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe elements for animation
+        document.querySelectorAll('.art-card, .category-card, .stat-card').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(el);
+        });
+
+        // Loading simulation for "더 많은 작품 보기" button
+        document.querySelector('.gallery-section .btn-outline-primary').addEventListener('click', function() {
+            const originalText = this.innerHTML;
+            this.innerHTML = '<div class="loading me-2"></div>로딩 중...';
+            this.disabled = true;
+            
+            // Simulate loading
+            setTimeout(() => {
+                this.innerHTML = originalText;
+                this.disabled = false;
+                // Here you would load more artworks
+                console.log('Loading more artworks...');
+            }, 2000);
+        });
+
+        // Mobile menu handling
+        const navbarToggler = document.querySelector('.navbar-toggler');
+        const navbarCollapse = document.querySelector('.navbar-collapse');
+        
+        if (navbarToggler && navbarCollapse) {
+            navbarToggler.addEventListener('click', function() {
+                navbarCollapse.classList.toggle('show');
+            });
+        }
+
+        // Header scroll effect
+        let lastScrollTop = 0;
+        const header = document.querySelector('.header');
+        
+        window.addEventListener('scroll', () => {
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            
+            if (scrollTop > lastScrollTop && scrollTop > 100) {
+                // Scrolling down
+                header.style.transform = 'translateY(-100%)';
+            } else {
+                // Scrolling up
+                header.style.transform = 'translateY(0)';
+            }
+            
+            lastScrollTop = scrollTop <= 0 ? 0 : scrollTop; // For Mobile or negative scrolling
+        });
+
+        // Add transition to header
+        header.style.transition = 'transform 0.3s ease-in-out';
+
+        // Statistics counter animation
+        function animateCounter(element, target, duration = 2000) {
+            let start = 0;
+            const increment = target / (duration / 16);
+            
+            const timer = setInterval(() => {
+                start += increment;
+                if (start >= target) {
+                    element.textContent = formatNumber(target);
+                    clearInterval(timer);
+                } else {
+                    element.textContent = formatNumber(Math.floor(start));
+                }
+            }, 16);
+        }
+
+        function formatNumber(num) {
+            if (num >= 1000000) {
+                return (num / 1000000).toFixed(1) + 'M+';
+            }
+            if (num >= 1000) {
+                return (num / 1000).toFixed(0) + 'K+';
+            }
+            return num + '+';
+        }
+
+        // Animate counters when they come into view
+        const statNumbers = document.querySelectorAll('.stat-number');
+        const statValues = [50000, 2000000, 15000000, 100000];
+
+        const statsObserver = new IntersectionObserver((entries) => {
+            entries.forEach((entry, index) => {
+                if (entry.isIntersecting) {
+                    animateCounter(entry.target, statValues[index]);
+                    statsObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.5 });
+
+        statNumbers.forEach(stat => {
+            statsObserver.observe(stat);
+        });
+    </script>
+</body>
+</html>

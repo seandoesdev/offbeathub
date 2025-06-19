@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>이미지 PDF 변환</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 20px;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            margin: auto;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        input[type="file"], input[type="text"] {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .spinner {
+            border: 4px solid #f3f3f3; /* Light grey */
+            border-top: 4px solid #3498db; /* Blue */
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            display: none; /* Hidden by default */
+            margin: 20px auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .message {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>이미지를 PDF로 변환</h1>
+
+        <form id="uploadForm">
+            <div>
+                <label for="imageFiles">이미지 파일 선택 (여러 개 선택 가능):</label>
+                <input type="file" id="imageFiles" name="images" accept="image/jpeg, image/png, image/gif, image/bmp" multiple required>
+            </div>
+
+            <div>
+                <label for="customFilename">PDF 파일명 (선택 사항, 확장자 제외):</label>
+                <input type="text" id="customFilename" name="filename" placeholder="예: my_converted_document">
+            </div>
+
+            <button type="submit">PDF로 변환</button>
+        </form>
+
+        <div class="spinner" id="loadingSpinner"></div>
+        <div id="statusMessage" class="message" style="display:none;"></div>
+    </div>
+
+    <script>
+        document.getElementById('uploadForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            const filesInput = document.getElementById('imageFiles');
+            const customFilenameInput = document.getElementById('customFilename');
+            const loadingSpinner = document.getElementById('loadingSpinner');
+            const statusMessage = document.getElementById('statusMessage');
+
+            if (filesInput.files.length === 0) {
+                showMessage('이미지 파일을 하나 이상 선택해주세요.', 'error');
+                return;
+            }
+
+            loadingSpinner.style.display = 'block';
+            statusMessage.style.display = 'none';
+
+            const formData = new FormData();
+            for (const file of filesInput.files) {
+                formData.append('images', file);
+            }
+            if (customFilenameInput.value.trim() !== '') {
+                formData.append('filename', customFilenameInput.value.trim());
+            }
+
+            let endpoint = '/api/v1/pdf-converter/multiple';
+            if (filesInput.files.length === 1) {
+                 // 단일 파일 업로드 시 'images' 대신 'image' 파라미터 사용 고려 (컨트롤러에 따라 다름)
+                 // 현재 컨트롤러는 /single, /multiple 엔드포인트가 분리되어 있으므로, 
+                 // 단일 파일도 /multiple로 보내거나, 아래처럼 엔드포인트를 변경할 수 있습니다.
+                 // 여기서는 편의상 /multiple을 계속 사용하되, 실제로는 /single을 위한 로직 분기가 필요할 수 있습니다.
+                 // 만약 단일 파일도 'images' 파라미터로 받는다면 아래 수정은 불필요합니다.
+                 // formData.delete('images'); // 기존 'images' 삭제
+                 // formData.append('image', filesInput.files[0]); // 'image'로 단일 파일 추가
+                 // endpoint = '/api/v1/pdf-converter/single';
+            }
+
+            try {
+                const response = await fetch(endpoint, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (response.ok) {
+                    const blob = await response.blob();
+                    const contentDisposition = response.headers.get('content-disposition');
+                    let filename = 'converted.pdf'; // 기본 파일명
+                    if (contentDisposition) {
+                        const filenameMatch = contentDisposition.match(/filename="?(.+[^\"])"?/i);
+                        if (filenameMatch && filenameMatch.length > 1) {
+                            filename = filenameMatch[1];
+                        }
+                    }
+
+                    const link = document.createElement('a');
+                    link.href = URL.createObjectURL(blob);
+                    link.download = filename;
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    URL.revokeObjectURL(link.href);
+                    showMessage(`'${filename}' 파일이 성공적으로 다운로드되었습니다.`, 'success');
+                } else {
+                    const errorData = await response.json();
+                    let errorMessage = `PDF 변환 실패: ${response.statusText}`;
+                    if (errorData && errorData.message) {
+                        errorMessage = errorData.message;
+                    }
+                    showMessage(errorMessage, 'error');
+                    console.error('Conversion failed:', errorData);
+                }
+            } catch (error) {
+                showMessage('오류 발생: ' + error.message, 'error');
+                console.error('Error during conversion:', error);
+            }
+            finally {
+                loadingSpinner.style.display = 'none';
+            }
+        });
+
+        function showMessage(message, type) {
+            const statusMessage = document.getElementById('statusMessage');
+            statusMessage.textContent = message;
+            statusMessage.className = 'message ' + type;
+            statusMessage.style.display = 'block';
+        }
+    </script>
+</body>
+</html>
